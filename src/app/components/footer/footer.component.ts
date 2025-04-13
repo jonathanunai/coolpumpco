@@ -10,15 +10,13 @@ import { CommonModule } from '@angular/common';
 })
 export class FooterComponent implements OnInit {
   currentYear!: number;
-  mockupData: any;
+  footerLinks: any[] = [];
 
   constructor(private sharedDataService: SharedDataService) {}
 
   ngOnInit(): void {
     this.currentYear = new Date().getFullYear();
-    this.sharedDataService.mockupData$.subscribe((data:any) => {
-      this.mockupData = data;
-    });
+    this.footerLinks = this.sharedDataService.footerLinks;
   }
 
 }

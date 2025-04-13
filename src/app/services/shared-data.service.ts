@@ -7,22 +7,61 @@ import { Pump } from '../models/pump.model';
   providedIn: 'root'
 })
 export class SharedDataService {
-  private mockupDataSubject = new BehaviorSubject<any>(null);
-  mockupData$ = this.mockupDataSubject.asObservable();
+  private filteredListSubject = new BehaviorSubject<Pump[]>([]);
+  private pagesSubject = new BehaviorSubject<number>(1);
+
+  private originaList: Pump[] = [];
+  private pageSize = 3;
+
+  public companyName: string = '';
+  public areas: string[] = [];
+  public status: string[] = [];
+  public footerLinks: [] = [];
+  public page: number = 1;
+  public pages: number = 1;
+
+
+  filteredList$ = this.filteredListSubject.asObservable();
+  pages$ = this.pagesSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
   loadInitialData(): void {
-    this.http.get('/assets/data.json').subscribe((data) => {
-      this.mockupDataSubject.next(data);
+    this.http.get<any>('/assets/data.json').subscribe((data) => {
+      this.originaList = data.pumpsInitialData;
+      this.areas = data.areas;
+      this.status = data.status;
+      this.footerLinks = data.footerLinks;
+      this.pages = Math.ceil(this.originaList.length / this.pageSize);
+      this.pagesSubject.next(this.pages);
+      this.filterData({}, 1)
     });
   }
-  deletePump(pumpId: number): void {
-    const data = this.mockupDataSubject.getValue();
-    if (data) {
-      const updatedPumps = data.pumpsInitialData.filter((pump: Pump) => pump.id !== pumpId);
-      this.mockupDataSubject.next({ ...data, pumpsInitialData: updatedPumps });
-    }
+
+  filterData(filters: { area?: string; status?: string; searchQuery?: string }, page: number = 1): void {
+    this.page = page;
+    const { area, status, searchQuery } = filters;
+    const filtered = this.originaList.filter((pump) => {
+      return (
+        (!area || pump.area === area) &&
+        (!status || pump.status === status) &&
+        (!searchQuery || pump.number.includes(searchQuery))
+      );
+    });
+    const start = (page - 1) * this.pageSize;
+    const paginated = filtered.slice(start, start + this.pageSize);
+    this.pages = Math.ceil(filtered.length / this.pageSize);
+    this.pagesSubject.next(this.pages);
+
+    this.filteredListSubject.next(paginated);
   }
 
+  deletePump(pumpId: number): void {
+    this.originaList = this.originaList.filter((pump: Pump) => pump.id !== pumpId);
+    this.filterData({}, 1);
+  }
+  addPump(newPump: Pump): void {
+    this.originaList = [...this.originaList, newPump];
+    this.filterData({}, 1);
+  }
 }

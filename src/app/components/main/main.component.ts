@@ -9,10 +9,11 @@ import { FilterComponent } from '../filter/filter.component';
 import { CreatePumpModalComponent } from '../create-pump-modal/create-pump-modal.component';
 
 import { Pump } from '../../models/pump.model';
+import { ButtonComponent } from "../button/button.component";
 
 @Component({
   selector: 'app-main',
-  imports: [CommonModule, PumpRowComponent, FilterComponent, FormsModule, CreatePumpModalComponent],
+  imports: [CommonModule, PumpRowComponent, FilterComponent, FormsModule, CreatePumpModalComponent, ButtonComponent],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
   animations: [
@@ -34,14 +35,11 @@ import { Pump } from '../../models/pump.model';
         ], { optional: true })
       ])
     ])
-
   ]
-
 })
 export class MainComponent implements OnInit {
   areas: string[] = [];
   pumps: Pump[] = [];
-  filteredPumps: Pump[] = [];
   status: string[] = [];
   selectedArea: string = '';
   selectedStatus: string = '';
@@ -49,24 +47,22 @@ export class MainComponent implements OnInit {
   showAreas: boolean = false;
   showStatus: boolean = false;
   showCreatePumpModal: boolean = false;
+  page: number = 1;
+  pages: number = 1;
 
   constructor(private sharedDataService: SharedDataService) {}
 
   ngOnInit(): void {
-    this.sharedDataService.mockupData$.subscribe((data:any) => {
-      this.areas = data?.areas;
-      this.pumps = this.filteredPumps = data?.pumpsInitialData;
-      this.status = data?.status;
+    this.sharedDataService.filteredList$.subscribe((data) => {
+      this.pumps = data;
+      this.page = this.sharedDataService.page;
+      this.areas = this.sharedDataService.areas;
+      this.status = this.sharedDataService.status;
     });
-  }
-  updateFilteredPumps(): void {
-    this.filteredPumps = this.pumps?.filter((pump: Pump) => {
-      return (
-        (this.selectedArea ? pump.area === this.selectedArea : true) &&
-        (this.selectedStatus ? pump.status === this.selectedStatus : true) &&
-        (this.searchQuery && this.searchQuery.length > 2 ? pump.number.includes(this.searchQuery) : true)
-      );
+    this.sharedDataService.pages$.subscribe((pages) => {
+      this.pages = pages;
     });
+
   }
 
   trackByPumpId(index: number, pump: Pump): number {
@@ -81,30 +77,35 @@ export class MainComponent implements OnInit {
     }
     this.showAreas = false;
     this.showStatus = false;
-    this.updateFilteredPumps();
+    this.sharedDataService.filterData({area: this.selectedArea, status: this.selectedStatus,  searchQuery: this.searchQuery}, 1);
   }
   changePumpStatus(id: number): void {
     const pump = this.pumps.find(p => p.id === id);
     if (pump) {
       pump.status = pump.status === 'active' ? 'inactive' : 'active';
-      this.updateFilteredPumps();
+      this.sharedDataService.filterData({area: this.selectedArea, status: this.selectedStatus,  searchQuery: this.searchQuery}, this.page);
     }
   }
   onSearchQueryChange(): void {
-    this.updateFilteredPumps();
+    this.sharedDataService.filterData({area: this.selectedArea, status: this.selectedStatus,  searchQuery: this.searchQuery}, 1);
   }
   onCreatePump(): void {
     this.showCreatePumpModal = true;
-    console.log('Create new pump button clicked!');
   }
   addPump(newPump: Pump): void {
     newPump.id = this.pumps.length + 1;
-    this.pumps.push(newPump); // Add the new pump to the list
-    this.updateFilteredPumps(); // Update the filtered list
+    this.sharedDataService.addPump(newPump);
+    this.sharedDataService.filterData({area: this.selectedArea, status: this.selectedStatus,  searchQuery: this.searchQuery}, 1);
   }
 
   closeModal(): void {
     this.showCreatePumpModal = false; // Close the modal
+  }
+  nextPage(): void {
+    this.sharedDataService.filterData({area: this.selectedArea, status: this.selectedStatus,  searchQuery: this.searchQuery}, this.sharedDataService.page + 1);
+  }
+  previousPage(): void {
+    this.sharedDataService.filterData({area: this.selectedArea, status: this.selectedStatus,  searchQuery: this.searchQuery}, this.sharedDataService.page - 1);
   }
 
 }

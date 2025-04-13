@@ -16,7 +16,6 @@ export class PumpRowComponent {
   @Input() pump!: Pump;
   @Output() statusChanged = new EventEmitter<number>();
   changePumpStatus(id: number): void {
-    console.log('changePumpStatus clicked!', id);
     this.statusChanged.emit(id);
   }
 

@@ -25,8 +25,8 @@ export class PumpDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     const pumpId = Number(this.route.snapshot.paramMap.get('id'));
-    this.sharedDataService.mockupData$.subscribe((data) => {
-      this.pump = data?.pumpsInitialData.find((p: Pump) => p.id === pumpId);
+    this.sharedDataService.filteredList$.subscribe((data: any) => {
+      this.pump = data.find((p: Pump) => p.id === pumpId);
     });
   }
   deletePump(): void {

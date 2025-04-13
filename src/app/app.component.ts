@@ -14,7 +14,7 @@ import { SharedDataService } from './services/shared-data.service';
 })
 export class AppComponent implements OnInit {
   constructor(private sharedDataService: SharedDataService) {}
-  title = 'mockup';
+  title = 'Cooling Pump App';
   ngOnInit(): void {
     this.sharedDataService.loadInitialData();
   }

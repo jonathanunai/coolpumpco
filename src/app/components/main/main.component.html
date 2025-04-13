@@ -36,12 +36,27 @@
 
   <div class="pump-list">
     <app-pump-row
-      *ngFor="let pump of filteredPumps; trackBy: trackByPumpId"
+      *ngFor="let pump of pumps; trackBy: trackByPumpId"
       [pump]="pump"
       class="p-4"
       [@listAnimation]
       (statusChanged)="changePumpStatus($event)"
     ></app-pump-row>
+    <div class=" space-x-2 text-center">
+      <app-button
+        label="Previous page"
+        class="w-full mt-4"
+        [ngClass]="page === 1 ? 'hidden' : ''"
+        (clicked)="previousPage()"
+      ></app-button>
+      <div class="border inline-block p-2 rounded bg-white"> {{page}}</div>
+      <app-button
+        label="Next page"
+        class="w-full mt-4"
+        [ngClass]="pages <= page ? 'hidden' : ''"
+        (clicked)="nextPage()"
+      ></app-button>
+    </div>
   </div>
   <app-create-pump-modal
     *ngIf="showCreatePumpModal"
