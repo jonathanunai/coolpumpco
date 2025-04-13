@@ -1,0 +1,15 @@
+<div class="max-w-screen-lg mx-auto py-12 px-4 space-y-8">
+  <h1 class="text-3xl font-bold">Pump Details</h1>
+  <div *ngIf="pump; else notFound" class="bg-white shadow rounded-lg p-6">
+    <p><strong>Pump Number:</strong> {{ pump.number }}</p>
+    <p><strong>Area:</strong> {{ pump.area }}</p>
+    <p><strong>Status:</strong> {{ pump.status }}</p>
+  </div>
+  <ng-template #notFound>
+    <p class="text-red-500">Pump not found.</p>
+  </ng-template>
+  <div class="flex space-x-2">
+    <app-button label="Back to List" routerLink="/" ></app-button>
+    <app-button label="Delete" routerLink="/" color="red" (clicked)="deletePump()"></app-button>
+  </div>
+</div>

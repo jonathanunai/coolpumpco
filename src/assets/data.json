@@ -1,0 +1,73 @@
+{
+  "companyName": "Cool Pump Co.",
+  "areas": ["A", "B", "C", "D", "E", "F"],
+  "status": ["active", "inactive"],
+  "pumpsInitialData": [
+    {
+      "id": 1,
+      "number": "2001",
+      "area": "A",
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "number": "2002",
+      "area": "B",
+      "status": "inactive"
+    },
+    {
+      "id": 3,
+      "number": "2003",
+      "area": "C",
+      "status": "active"
+    },
+    {
+      "id": 4,
+      "number": "2004",
+      "area": "A",
+      "status": "inactive"
+    },
+    {
+      "id": 5,
+      "number": "2005",
+      "area": "B",
+      "status": "active"
+    }
+  ],
+  "footerLinks": [
+    {
+      "title": "Company",
+      "links": [
+        { "name": "Contact us", "url": "#" },
+        { "name": "About company", "url": "#" },
+        { "name": "Career", "url": "#" },
+        { "name": "News", "url": "#" }
+      ]
+    },
+    {
+      "title": "Follow",
+      "links": [
+        { "name": "Instagram", "url": "#" },
+        { "name": "LinkedIn", "url": "#" },
+        { "name": "Facebook", "url": "#" }
+      ]
+    },
+    {
+      "title": "Support",
+      "links": [
+        { "name": "Documentation", "url": "#" },
+        { "name": "Get help", "url": "#" },
+        { "name": "Service status", "url": "#" }
+      ]
+    },
+    {
+      "title": "About",
+      "links": [
+        { "name": "Terms of service", "url": "#" },
+        { "name": "Privacy policy", "url": "#" },
+        { "name": "Security", "url": "#" },
+        { "name": "Sitemap", "url": "#" }
+      ]
+    }
+  ]
+}

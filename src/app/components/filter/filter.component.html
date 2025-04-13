@@ -1,0 +1,25 @@
+<div class="relative">
+  <div
+    class="p-2 pl-4 bg-white rounded-full w-full cursor-pointer capitalize"
+    (click)="toggleOptions()"
+  >
+    {{ selectedOption || placeholder }}
+    <i class="fas fa-caret-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"></i>
+  </div>
+  <div
+    class="absolute bg-white w-full rounded-xl shadow-xl top-0 z-10"
+    [ngClass]="{ 'hidden': !showOptions }"
+    [@toggleVisibility]="showOptions ? 'visible' : 'hidden'"
+  >
+    <ul class="p-2 font-semibold">
+      <li
+        *ngFor="let option of options"
+        (click)="selectOption(option)"
+        class="cursor-pointer hover:bg-gray-50 rounded px-2 py-1 capitalize"
+      >
+        {{ option }}
+      </li>
+      <li (click)="selectOption('')" class="cursor-pointer hover:bg-gray-50 rounded px-2 py-1">No filter</li>
+    </ul>
+  </div>
+</div>
