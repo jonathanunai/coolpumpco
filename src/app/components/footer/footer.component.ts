@@ -16,7 +16,9 @@ export class FooterComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentYear = new Date().getFullYear();
-    this.footerLinks = this.sharedDataService.footerLinks;
+    this.sharedDataService.footerLinks$.subscribe((links) => {
+      this.footerLinks = links;
+    });
   }
 
 }

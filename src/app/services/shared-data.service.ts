@@ -9,9 +9,10 @@ import { Pump } from '../models/pump.model';
 export class SharedDataService {
   private filteredListSubject = new BehaviorSubject<Pump[]>([]);
   private pagesSubject = new BehaviorSubject<number>(1);
+  private footerLinksSubject = new BehaviorSubject<any[]>([]);
 
   private originaList: Pump[] = [];
-  private pageSize = 3;
+  private pageSize = 5;
 
   public companyName: string = '';
   public areas: string[] = [];
@@ -23,6 +24,7 @@ export class SharedDataService {
 
   filteredList$ = this.filteredListSubject.asObservable();
   pages$ = this.pagesSubject.asObservable();
+  footerLinks$ = this.footerLinksSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -31,7 +33,7 @@ export class SharedDataService {
       this.originaList = data.pumpsInitialData;
       this.areas = data.areas;
       this.status = data.status;
-      this.footerLinks = data.footerLinks;
+      this.footerLinksSubject.next(data.footerLinks || []);
       this.pages = Math.ceil(this.originaList.length / this.pageSize);
       this.pagesSubject.next(this.pages);
       this.filterData({}, 1)
