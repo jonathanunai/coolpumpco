@@ -93,7 +93,8 @@ export class MainComponent implements OnInit {
     this.showCreatePumpModal = true;
   }
   addPump(newPump: Pump): void {
-    newPump.id = this.pumps.length + 1;
+    const highestId = this.pumps.reduce((max, pump) => (pump.id > max ? pump.id : max), 0);
+    newPump.id = highestId + 1;
     this.sharedDataService.addPump(newPump);
     this.sharedDataService.filterData({area: this.selectedArea, status: this.selectedStatus,  searchQuery: this.searchQuery}, 1);
   }
